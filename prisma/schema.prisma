@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses          Expense[]
+  paymentPlans      PaymentPlan[]
+  debts             Debt[]
+  budgets           Budget[]
+  savingsGoals      SavingsGoal[]
+  recurringExpenses RecurringExpense[]
+  bills             Bill[]
+  assets            Asset[]
+}
+
+model Expense {
+  id          String          @id @default(cuid())
+  userId      String
+  amount      Float
+  description String
+  category    ExpenseCategory
+  date        DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PaymentPlan {
+  id           String            @id @default(cuid())
+  userId       String
+  name         String
+  totalAmount  Float
+  paidAmount   Float             @default(0)
+  interestRate Float             @default(0)
+  installments Int
+  startDate    DateTime
+  endDate      DateTime
+  status       PaymentPlanStatus @default(ACTIVE)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  paymentPlanId String
+  amount        Float
+  dueDate       DateTime
+  paidDate      DateTime?
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+
+  paymentPlan PaymentPlan @relation(fields: [paymentPlanId], references: [id], onDelete: Cascade)
+}
+
+model Debt {
+  id             String       @id @default(cuid())
+  userId         String
+  name           String
+  totalAmount    Float
+  paidAmount     Float        @default(0)
+  interestRate   Float
+  minimumPayment Float
+  dueDate        DateTime?
+  strategy       DebtStrategy @default(AVALANCHE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Budget {
+  id        String          @id @default(cuid())
+  userId    String
+  category  ExpenseCategory
+  limit     Float
+  month     Int
+  year      Int
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category, month, year])
+}
+
+model SavingsGoal {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  targetAmount Float
+  savedAmount  Float     @default(0)
+  targetDate   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RecurringExpense {
+  id          String          @id @default(cuid())
+  userId      String
+  amount      Float
+  description String
+  category    ExpenseCategory
+  dayOfMonth  Int
+  active      Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Bill {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  amount    Float
+  dueDate   DateTime
+  paid      Boolean  @default(false)
+  recurring Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Asset {
+  id        String        @id @default(cuid())
+  userId    String
+  name      String
+  value     Float
+  category  AssetCategory
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum ExpenseCategory {
+  FOOD
+  TRANSPORT
+  HOUSING
+  UTILITIES
+  HEALTHCARE
+  ENTERTAINMENT
+  SHOPPING
+  EDUCATION
+  SAVINGS
+  DEBT_PAYMENT
+  OTHER
+}
+
+enum PaymentPlanStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum DebtStrategy {
+  AVALANCHE
+  SNOWBALL
+}
+
+enum AssetCategory {
+  CASH
+  INVESTMENT
+  PROPERTY
+  VEHICLE
+  OTHER
+}
