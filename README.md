@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+BankingAI:
 
-## Getting Started
+A full-stack personal finance management application powered by Claude AI. Built with Next.js, PostgreSQL, and shadcn/ui.
 
-First, run the development server:
+Overview:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+BankingAI gives you a complete picture of your finances in one place. Log expenses, track debt, manage payment plans, set budgets, and get personalized advice from an AI financial advisor that has direct access to your financial data.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Features:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Expense Tracking - Log, categorize, and filter expenses. Import and export via CSV.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Payment Plans - Create installment plans with automatic EMI and interest calculations.
 
-## Learn More
+Debt Tracker - Track debts with avalanche and snowball payoff strategies.
 
-To learn more about Next.js, take a look at the following resources:
+Budget Management - Set monthly limits per category with live progress tracking.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Savings Goals - Set targets, make contributions, and track progress.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Bill Reminders - Organize upcoming bills by due date.
 
-## Deploy on Vercel
+Net Worth - Track assets vs liabilities in one view.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Calculators - Compound interest, loan EMI, and debt payoff calculators.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+AI Advisor - Chat with Claude AI about your finances with real data context.
+
+AI Insights - Automatic spending analysis, debt strategy recommendations, and natural language expense entry.
+
+Dark Mode - System-aware light and dark theme.
+
+Stack:
+
+Next.js 16, shadcn/ui, Tailwind CSS, Clerk, PostgreSQL, Prisma, Anthropic Claude, Recharts
+
+Getting Started:
+
+Prerequisites: Node.js 18+, PostgreSQL, Clerk account, Anthropic API key
+
+Clone the repository and install dependencies. Create a .env file in the root with your DATABASE_URL, Clerk keys, and Anthropic API key. Run npx prisma db push and npx prisma generate to set up the database. Then start the development server with npm run dev and open http://localhost:3000.
+
+Configuration:
+
+Clerk - In your Clerk dashboard, go to Configure > Restrictions and add http://localhost:3000 to allowed redirect origins. Then go to Configure > Paths and set the sign-in redirect URL to /dashboard.
+
+Anthropic - AI features require Anthropic API credits. Note that the Claude Pro subscription is separate from API access and does not grant API usage.
